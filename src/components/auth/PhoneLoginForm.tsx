@@ -66,12 +66,9 @@ export default function PhoneLoginForm() {
     setError("");
 
     try {
-      const result = await confirmationResult.confirm(verificationCode);
-      const user = result.user;
-      
-      // On success, we route them to the hub dashboard (could be dynamic based on role)
-      router.push("/hub");
-      
+      await confirmationResult.confirm(verificationCode);
+      // AuthContext will detect the signed-in user and the login page
+      // will redirect to onboarding (new user) or dashboard (returning user).
     } catch (err: any) {
       console.error(err);
       setError("Invalid verification code. Please try again.");
