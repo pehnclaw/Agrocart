@@ -1,94 +1,92 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
+import { useAuth } from "@/contexts/AuthContext";
 import { Trip } from "@/types";
 
 export default function AvailableLoads() {
+  const { firebaseUser } = useAuth();
   const [loads, setLoads] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
+  const [accepting, setAccepting] = useState<string | null>(null);
 
   useEffect(() => {
-    // In a real app, you'd fetch from Firestore `trips` collection
     const q = query(collection(db, "trips"), where("status", "==", "PENDING_BID"));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetched: Trip[] = [];
       snapshot.forEach((doc) => fetched.push({ ...doc.data(), id: doc.id } as Trip));
-      
-      if (fetched.length === 0) {
-        // Mock data for the MVP
-        setLoads([
-          {
-            id: "load-1",
-            originHubId: "Dawanau Mega Hub (Kano)",
-            destinationHubId: "Lagos Central Market",
-            batchIds: ["batch-x", "batch-y"],
-            status: "PENDING_BID",
-            agreedPrice: 150000,
-            escrowStatus: "HELD",
-            createdAt: Date.now(),
-            updatedAt: Date.now()
-          },
-          {
-            id: "load-2",
-            originHubId: "Makurdi Transit Hub (Benue)",
-            destinationHubId: "Port Harcourt Depot",
-            batchIds: ["batch-z"],
-            status: "PENDING_BID",
-            agreedPrice: 85000,
-            escrowStatus: "HELD",
-            createdAt: Date.now(),
-            updatedAt: Date.now()
-          }
-        ]);
-      } else {
-        setLoads(fetched);
-      }
+      setLoads(fetched);
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const handleAcceptLoad = (id: string) => {
-    alert(`Load ${id} accepted! Escrow payment locked. Proceed to origin hub for pickup.`);
-    // In real app: Update doc status to "ACCEPTED" and set escrowStatus
+  const handleAcceptLoad = async (tripId: string) => {
+    if (!firebaseUser) return;
+    setAccepting(tripId);
+
+    try {
+      await updateDoc(doc(db, "trips", tripId), {
+        status: "ACCEPTED",
+        vehicleId: firebaseUser.uid,
+        updatedAt: Date.now(),
+      });
+    } catch (err) {
+      console.error("Failed to accept load:", err);
+      alert("Failed to accept load. Please try again.");
+    } finally {
+      setAccepting(null);
+    }
   };
 
   if (loading) {
     return <p className="text-muted animate-pulse">Scanning load boards...</p>;
   }
 
+  if (loads.length === 0) {
+    return (
+      <div className="text-center py-12 text-muted">
+        <span className="text-5xl block mb-4">🛣️</span>
+        <p className="font-semibold text-lg mb-1">No loads available right now</p>
+        <p className="text-sm">New loads will appear here when HQ dispatches trips.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
       {loads.map((load) => (
-        <div key={load.id} className="card glass p-6 hover:-translate-y-2 transition-transform duration-300">
+        <div key={load.id} className="card glass p-5 hover:shadow-lg transition-shadow">
           <div className="flex justify-between items-start mb-4">
             <span className="badge badge-warning text-xs">Backhaul Opportunity</span>
             <span className="text-xl font-bold text-primary">₦{load.agreedPrice.toLocaleString()}</span>
           </div>
           
-          <div className="mb-6 relative">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-3 h-3 rounded-full bg-primary"></div>
-              <p className="font-semibold">{load.originHubId}</p>
+          {/* Route visualization */}
+          <div className="mb-4">
+            <div className="flex items-center gap-3 mb-1">
+              <div className="w-3 h-3 rounded-full bg-primary shrink-0"></div>
+              <p className="font-semibold text-sm truncate">{load.originHubId.slice(0, 20)}</p>
             </div>
-            <div className="w-0.5 h-6 bg-border ml-1.5 mb-2"></div>
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-full bg-accent border-2 border-background"></div>
-              <p className="font-semibold">{load.destinationHubId}</p>
+            <div className="w-0.5 h-5 bg-border ml-1.5"></div>
+            <div className="flex items-center gap-3 mt-1">
+              <div className="w-3 h-3 rounded-full bg-accent shrink-0"></div>
+              <p className="font-semibold text-sm truncate">{load.destinationHubId.slice(0, 20)}</p>
             </div>
           </div>
           
-          <div className="flex justify-between items-center mt-6">
-            <p className="text-sm text-muted">{load.batchIds.length} Batches (Pooled)</p>
+          <div className="flex justify-between items-center">
+            <p className="text-sm text-muted">{load.batchIds.length} Batches</p>
             <button 
               onClick={() => handleAcceptLoad(load.id)}
-              className="btn btn-primary shadow-lg shadow-primary/30"
+              disabled={accepting === load.id}
+              className="btn btn-primary text-sm py-2 px-4"
             >
-              Accept Load
+              {accepting === load.id ? "Accepting..." : "Accept Load"}
             </button>
           </div>
         </div>
