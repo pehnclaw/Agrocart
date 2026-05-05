@@ -4,15 +4,14 @@ import HubMap from "@/components/hq/HubMap";
 import InventoryVault from "@/components/hq/InventoryVault";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
-import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase/config";
+import Link from "next/link";
 
 export default function HQDashboard() {
   const { userProfile } = useAuth();
 
   return (
     <ProtectedRoute allowedRoles={["ADMIN"]}>
-      <main className="animate-fade-in p-6 min-h-screen flex flex-col max-w-7xl mx-auto">
+      <main className="animate-fade-in p-6 min-h-screen flex flex-col">
         <header className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="text-3xl text-primary font-bold">HQ Control Tower</h1>
@@ -20,12 +19,9 @@ export default function HQDashboard() {
               Welcome, <span className="font-semibold text-foreground">{userProfile?.fullName}</span>. National overview.
             </p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             <button className="btn btn-outline">Analytics Report</button>
             <button className="btn btn-primary">Dispatch Trucks</button>
-            <button onClick={() => signOut(auth)} className="btn btn-outline text-sm">
-              Sign Out
-            </button>
           </div>
         </header>
 

@@ -11,7 +11,6 @@ const roleOptions: { value: UserRole; label: string; description: string; icon: 
   { value: "FARMER", label: "Farmer", description: "I grow crops and deliver to hubs", icon: "🌾" },
   { value: "HUB_MANAGER", label: "Hub Manager", description: "I manage a collection hub", icon: "🏭" },
   { value: "TRANSPORTER", label: "Transporter", description: "I transport goods between hubs", icon: "🚛" },
-  { value: "ADMIN", label: "Admin / Buyer", description: "I manage operations at HQ", icon: "📡" },
 ];
 
 export default function OnboardingPage() {
