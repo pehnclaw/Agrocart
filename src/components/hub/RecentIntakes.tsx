@@ -3,17 +3,23 @@
 import { useEffect, useState } from "react";
 import { collection, query, where, onSnapshot, orderBy, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
+import { useAuth } from "@/contexts/AuthContext";
 import { ProduceBatch } from "@/types";
 
 export default function RecentIntakes() {
+  const { userProfile } = useAuth();
   const [batches, setBatches] = useState<ProduceBatch[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In a real app, originHubId would be the logged-in user's hub ID
+    if (!userProfile) return;
+
+    // Hub Manager sees only their hub's batches
+    const hubId = userProfile.hubId || userProfile.id || "unassigned";
+    
     const q = query(
       collection(db, "batches"),
-      where("originHubId", "==", "placeholder-hub-id"),
+      where("originHubId", "==", hubId),
       orderBy("createdAt", "desc"),
       limit(10)
     );
@@ -31,14 +37,19 @@ export default function RecentIntakes() {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [userProfile]);
 
   if (loading) {
     return <p className="text-muted animate-pulse">Loading recent intakes...</p>;
   }
 
   if (batches.length === 0) {
-    return <p className="text-muted">No intakes recorded yet. They will appear here when offline or online.</p>;
+    return (
+      <div className="text-center py-8 text-muted">
+        <span className="text-3xl block mb-2">📦</span>
+        <p>No intakes recorded yet at this hub.</p>
+      </div>
+    );
   }
 
   return (

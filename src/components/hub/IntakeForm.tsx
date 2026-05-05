@@ -6,8 +6,10 @@ import { db } from "@/lib/firebase/config";
 import { v4 as uuidv4 } from "uuid";
 import { QRCodeSVG } from "qrcode.react";
 import { ProduceBatch } from "@/types";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function IntakeForm() {
+  const { userProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [successBatchId, setSuccessBatchId] = useState<string | null>(null);
   
@@ -35,11 +37,10 @@ export default function IntakeForm() {
         moisturePercent: moisturePercent ? Number(moisturePercent) : undefined,
         grade,
         status: "AT_HUB",
-        originHubId: "placeholder-hub-id", // Replace with actual logged-in user's hub ID
+        // Use the logged-in hub manager's assigned hub, fallback to their user ID
+        originHubId: userProfile?.hubId || userProfile?.id || "unassigned",
       };
 
-      // We use setDoc with a specific ID rather than addDoc
-      // This ensures offline writes work seamlessly and we know the ID for the QR code instantly
       const batchRef = doc(collection(db, "batches"), batchId);
       await setDoc(batchRef, batchData);
 
@@ -64,7 +65,7 @@ export default function IntakeForm() {
 
   if (successBatchId) {
     return (
-      <div className="card glass p-6 animate-fade-in text-center flex flex-col items-center">
+      <div className="animate-fade-in text-center flex flex-col items-center">
         <h2 className="text-2xl text-primary font-bold mb-2">Intake Successful!</h2>
         <p className="text-muted mb-6">Digital Waybill has been generated.</p>
         

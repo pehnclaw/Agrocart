@@ -20,6 +20,7 @@ export default function LoginPage() {
         case "HUB_MANAGER": router.replace("/hub"); break;
         case "ADMIN": router.replace("/hq"); break;
         case "TRANSPORTER": router.replace("/loadboard"); break;
+        case "FARMER": router.replace("/farmer"); break;
         default: router.replace("/"); break;
       }
     }

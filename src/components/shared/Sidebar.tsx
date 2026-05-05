@@ -12,6 +12,7 @@ const navItems = {
     { href: "/hq/users", label: "User Management", icon: "👥" },
     { href: "/hub", label: "Hub View", icon: "🏭" },
     { href: "/loadboard", label: "Load Board", icon: "🚛" },
+    { href: "/farmer", label: "Farmer View", icon: "🌾" },
   ],
   HUB_MANAGER: [
     { href: "/hub", label: "My Hub", icon: "🏭" },
@@ -20,7 +21,7 @@ const navItems = {
     { href: "/loadboard", label: "Load Board", icon: "🚛" },
   ],
   FARMER: [
-    { href: "/", label: "Home", icon: "🌾" },
+    { href: "/farmer", label: "My Dashboard", icon: "🌾" },
   ],
 };
 

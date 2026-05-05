@@ -1,6 +1,7 @@
 "use client";
 
 import AvailableLoads from "@/components/loadboard/AvailableLoads";
+import MyTrips from "@/components/loadboard/MyTrips";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -23,11 +24,21 @@ export default function LoadBoardPage() {
           </div>
         </header>
 
-        <section>
-          <h2 className="text-2xl font-bold mb-2">Available Loads Nearby</h2>
-          <p className="text-muted">Pooled loads optimized for your current route.</p>
-          <AvailableLoads />
-        </section>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Available Loads — 2/3 width */}
+          <section className="lg:col-span-2">
+            <h2 className="text-2xl font-bold mb-2">Available Loads Nearby</h2>
+            <p className="text-muted mb-4">Pooled loads optimized for your current route.</p>
+            <AvailableLoads />
+          </section>
+
+          {/* My Trips — 1/3 width */}
+          <section>
+            <h2 className="text-2xl font-bold mb-2">My Trips</h2>
+            <p className="text-muted mb-4">Your active and completed deliveries.</p>
+            <MyTrips />
+          </section>
+        </div>
       </main>
     </ProtectedRoute>
   );
