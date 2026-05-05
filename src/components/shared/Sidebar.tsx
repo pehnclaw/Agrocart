@@ -9,6 +9,8 @@ import { auth } from "@/lib/firebase/config";
 const navItems = {
   ADMIN: [
     { href: "/hq", label: "Control Tower", icon: "📡" },
+    { href: "/hq/hubs", label: "Hub Management", icon: "📍" },
+    { href: "/hq/dispatch", label: "Trip Dispatch", icon: "🗺️" },
     { href: "/hq/users", label: "User Management", icon: "👥" },
     { href: "/hub", label: "Hub View", icon: "🏭" },
     { href: "/loadboard", label: "Load Board", icon: "🚛" },
