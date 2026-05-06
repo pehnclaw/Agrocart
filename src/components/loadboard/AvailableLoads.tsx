@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Trip } from "@/types";
 
 export default function AvailableLoads() {
-  const { firebaseUser } = useAuth();
+  const { firebaseUser, userProfile } = useAuth();
   const [loads, setLoads] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState<string | null>(null);
@@ -33,6 +33,7 @@ export default function AvailableLoads() {
       await updateDoc(doc(db, "trips", tripId), {
         status: "ACCEPTED",
         vehicleId: firebaseUser.uid,
+        transporterPhone: userProfile?.phoneNumber || "",
         updatedAt: Date.now(),
       });
     } catch (err) {

@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { QRCodeSVG } from "qrcode.react";
 import { ProduceBatch } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
+import { sendAgrocartSMS, SMSTemplates } from "@/lib/sms";
 
 export default function IntakeForm() {
   const { userProfile } = useAuth();
@@ -80,6 +81,13 @@ export default function IntakeForm() {
 
       const batchRef = doc(collection(db, "batches"), batchId);
       await setDoc(batchRef, batchData);
+
+      // Trigger SMS to Farmer (Digital Receipt)
+      setUploadStatus("Sending SMS receipt...");
+      await sendAgrocartSMS(
+        farmerPhone, 
+        SMSTemplates.intakeReceipt(batchData.weightKg, cropType, userProfile?.fullName || "Agrocart Hub")
+      );
 
       setSuccessBatchId(batchId);
       

@@ -11,6 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const navItems = {
   ADMIN: [
     { href: "/hq", labelKey: "nav_hq", icon: "📡" },
+    { href: "/hq/analytics", labelKey: "nav_analytics", icon: "📊" },
     { href: "/hq/hubs", labelKey: "nav_hubs", icon: "📍" },
     { href: "/hq/dispatch", labelKey: "nav_dispatch", icon: "🗺️" },
     { href: "/hq/users", labelKey: "nav_users", icon: "👥" },

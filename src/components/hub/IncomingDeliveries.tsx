@@ -5,6 +5,7 @@ import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/f
 import { db } from "@/lib/firebase/config";
 import { useAuth } from "@/contexts/AuthContext";
 import { Trip } from "@/types";
+import { sendAgrocartSMS, SMSTemplates } from "@/lib/sms";
 
 export default function IncomingDeliveries() {
   const { userProfile } = useAuth();
@@ -58,6 +59,15 @@ export default function IncomingDeliveries() {
       );
       
       await Promise.all(batchPromises);
+
+      // Trigger SMS to Transporter (Escrow Released)
+      const transporterPhone = (trip as any).transporterPhone;
+      if (transporterPhone) {
+        await sendAgrocartSMS(
+          transporterPhone,
+          SMSTemplates.deliveryComplete(trip.id)
+        );
+      }
 
       alert("Delivery received successfully! Escrow released.");
     } catch (error) {
