@@ -2,6 +2,7 @@
 
 import IntakeForm from "@/components/hub/IntakeForm";
 import RecentIntakes from "@/components/hub/RecentIntakes";
+import IncomingDeliveries from "@/components/hub/IncomingDeliveries";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -24,9 +25,16 @@ export default function HubDashboard() {
             <IntakeForm />
           </section>
 
-          <section className="card p-6 md:col-span-2 h-fit">
-            <h2 className="text-xl font-semibold mb-4">Recent Intakes</h2>
-            <RecentIntakes />
+          <section className="flex flex-col gap-8 md:col-span-2">
+            <div className="card p-6 h-fit border-primary/20">
+              <h2 className="text-xl font-semibold mb-4 text-primary">Incoming Deliveries</h2>
+              <IncomingDeliveries />
+            </div>
+
+            <div className="card p-6 h-fit">
+              <h2 className="text-xl font-semibold mb-4">Recent Intakes</h2>
+              <RecentIntakes />
+            </div>
           </section>
         </div>
       </main>

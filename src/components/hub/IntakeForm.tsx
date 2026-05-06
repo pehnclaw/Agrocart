@@ -19,12 +19,48 @@ export default function IntakeForm() {
   const [weightKg, setWeightKg] = useState("");
   const [moisturePercent, setMoisturePercent] = useState("");
   const [grade, setGrade] = useState<"A" | "B" | "C">("A");
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [uploadStatus, setUploadStatus] = useState("");
+
+  const uploadPhotoToCloudinary = async (file: File) => {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+    if (!cloudName || !uploadPreset) {
+      console.warn("Cloudinary env vars missing. Photo will not be uploaded.");
+      return null;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", uploadPreset);
+
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      return data.secure_url;
+    } catch (err) {
+      console.error("Cloudinary upload failed:", err);
+      return null;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      let photoUrl = undefined;
+
+      if (photo) {
+        setUploadStatus("Uploading photo...");
+        photoUrl = await uploadPhotoToCloudinary(photo) || undefined;
+      }
+
+      setUploadStatus("Saving to database...");
       const batchId = uuidv4();
       
       const batchData: ProduceBatch = {
@@ -36,6 +72,7 @@ export default function IntakeForm() {
         weightKg: Number(weightKg),
         moisturePercent: moisturePercent ? Number(moisturePercent) : undefined,
         grade,
+        photoUrl,
         status: "AT_HUB",
         // Use the logged-in hub manager's assigned hub, fallback to their user ID
         originHubId: userProfile?.hubId || userProfile?.id || "unassigned",
@@ -61,6 +98,8 @@ export default function IntakeForm() {
     setWeightKg("");
     setMoisturePercent("");
     setGrade("A");
+    setPhoto(null);
+    setUploadStatus("");
   };
 
   if (successBatchId) {
@@ -158,8 +197,20 @@ export default function IntakeForm() {
         </select>
       </div>
 
+      <div>
+        <label className="block text-sm font-medium mb-1">Photo Evidence (Quality Vault)</label>
+        <input 
+          type="file" 
+          accept="image/*"
+          capture="environment"
+          className="input file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-primary-dark hover:file:bg-primary-light/80" 
+          onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+        />
+        <p className="text-xs text-muted mt-1">Take a picture of the crops for international compliance tracking.</p>
+      </div>
+
       <button type="submit" className="btn btn-primary mt-2" disabled={loading}>
-        {loading ? "Saving..." : "Log Intake & Generate Waybill"}
+        {loading ? (uploadStatus || "Saving...") : "Log Intake & Generate Waybill"}
       </button>
     </form>
   );

@@ -41,6 +41,7 @@ export interface ProduceBatch extends BaseDocument {
   farmerId?: string;
   farmerPhone?: string; // Fallback if farmer isn't a registered user
   qrCodeUrl?: string; // Digital Waybill
+  photoUrl?: string; // Cloudinary image URL for Quality Vault
 }
 
 // Vehicle (Firestore: /vehicles/{vehicleId})
