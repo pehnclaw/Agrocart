@@ -42,7 +42,7 @@ export default function Home() {
                 </button>
               ))}
             </div>
-            <Link href="/login" className="btn btn-outline py-1.5 sm:py-2 px-4 sm:px-6 text-xs sm:text-sm font-bold border-2 hidden sm:flex">
+            <Link href="/login" className="btn btn-outline py-1.5 sm:py-2 px-4 sm:px-6 text-xs sm:text-sm font-bold border-2 hidden md:flex">
               {t("login")}
             </Link>
           </div>
