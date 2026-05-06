@@ -11,6 +11,7 @@ export default function LoginPage() {
   const { firebaseUser, userProfile, loading, isNewUser } = useAuth();
   const { t } = useLanguage();
   const router = useRouter();
+  const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
     if (loading) return;
@@ -87,16 +88,28 @@ export default function LoginPage() {
 
         <div className="w-full max-w-sm">
           <div className="mb-8">
-            <h1 className="text-3xl font-extrabold mb-2">Welcome Back</h1>
-            <p className="text-muted">Enter your phone number to sign in securely.</p>
+            <h1 className="text-3xl font-extrabold mb-2">
+              {isSignUp ? "Create Account" : "Welcome Back"}
+            </h1>
+            <p className="text-muted">
+              {isSignUp 
+                ? "Join the Agrocart network today." 
+                : "Enter your phone number to sign in securely."}
+            </p>
           </div>
 
           <div className="card glass p-6 border-2 border-primary/10 shadow-xl shadow-primary/5">
-            <PhoneLoginForm />
+            <PhoneLoginForm isSignUpMode={isSignUp} />
           </div>
 
           <p className="mt-8 text-center text-sm text-muted">
-            Don't have an account? <span className="text-primary font-bold">Sign up now</span>
+            {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+            <button 
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="text-primary font-bold hover:underline"
+            >
+              {isSignUp ? "Sign in instead" : "Sign up now"}
+            </button>
           </p>
         </div>
 

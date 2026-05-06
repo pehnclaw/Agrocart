@@ -2,10 +2,15 @@
 
 import { useState, useEffect, useRef } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
-import { auth } from "@/lib/firebase/config";
+import { auth, db } from "@/lib/firebase/config";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
-export default function PhoneLoginForm() {
+interface PhoneLoginFormProps {
+  isSignUpMode?: boolean;
+}
+
+export default function PhoneLoginForm({ isSignUpMode = false }: PhoneLoginFormProps) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
@@ -47,6 +52,20 @@ export default function PhoneLoginForm() {
       const appVerifier = window.recaptchaVerifier;
       // Format number to include country code if missing (Basic validation)
       const formattedNumber = phoneNumber.startsWith("+") ? phoneNumber : `+234${phoneNumber.replace(/^0+/, '')}`;
+      
+      // Check if user exists in Firestore
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("phoneNumber", "==", formattedNumber));
+      const querySnapshot = await getDocs(q);
+      const userExists = !querySnapshot.empty;
+
+      if (isSignUpMode && userExists) {
+        throw new Error("An account with this number already exists. Please Sign In.");
+      }
+
+      if (!isSignUpMode && !userExists) {
+        throw new Error("No account found with this number. Please Sign Up first.");
+      }
       
       const confirmation = await signInWithPhoneNumber(auth, formattedNumber, appVerifier);
       setConfirmationResult(confirmation);
@@ -137,7 +156,7 @@ export default function PhoneLoginForm() {
             className="btn btn-primary w-full"
             disabled={loading}
           >
-            {loading ? "Verifying..." : "Verify & Sign In"}
+            {loading ? "Verifying..." : (isSignUpMode ? "Verify & Create Account" : "Verify & Sign In")}
           </button>
           <button 
             type="button"

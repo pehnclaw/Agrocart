@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase/config";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const navItems = {
   ADMIN: [
@@ -50,6 +51,7 @@ const mobileTabItems = {
 export default function Sidebar() {
   const { userProfile } = useAuth();
   const pathname = usePathname();
+  const { language, setLanguage } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   if (!userProfile) return null;
@@ -90,8 +92,23 @@ export default function Sidebar() {
           })}
         </nav>
 
-        {/* User Info + Logout */}
+        {/* Language + User Info + Logout */}
         <div className="p-4 border-t border-border">
+          <div className="flex items-center gap-1 bg-surface-hover p-1 rounded-lg border border-border mb-4">
+            {(["en", "ha", "yo", "ig"] as const).map((lang) => (
+              <button
+                key={lang}
+                onClick={() => setLanguage(lang)}
+                className={`flex-1 py-1 rounded-md text-[10px] font-bold transition-all ${
+                  language === lang 
+                    ? "bg-primary text-white shadow-sm" 
+                    : "text-muted hover:text-foreground"
+                }`}
+              >
+                {lang.toUpperCase()}
+              </button>
+            ))}
+          </div>
           <div className="mb-3">
             <p className="font-semibold text-sm truncate">{userProfile.fullName}</p>
             <p className="text-xs text-muted">{userProfile.phoneNumber}</p>
@@ -148,7 +165,22 @@ export default function Sidebar() {
                 );
               })}
             </nav>
-            <div className="p-3 border-t border-border">
+            <div className="p-4 border-t border-border">
+              <div className="flex items-center gap-1 bg-surface-hover p-1 rounded-lg border border-border mb-4">
+                {(["en", "ha", "yo", "ig"] as const).map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => { setLanguage(lang); setMobileMenuOpen(false); }}
+                    className={`flex-1 py-2 rounded-md text-xs font-bold transition-all ${
+                      language === lang 
+                        ? "bg-primary text-white" 
+                        : "text-muted"
+                    }`}
+                  >
+                    {lang.toUpperCase()}
+                  </button>
+                ))}
+              </div>
               <button
                 onClick={() => { signOut(auth); setMobileMenuOpen(false); }}
                 className="btn btn-outline w-full text-sm"
