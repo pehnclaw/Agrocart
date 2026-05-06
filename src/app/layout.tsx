@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import DashboardLayout from "@/components/shared/DashboardLayout";
 import OfflineIndicator from "@/components/shared/OfflineIndicator";
 import "./globals.css";
@@ -28,12 +29,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
-        <AuthProvider>
-          <OfflineIndicator />
-          <DashboardLayout>
-            {children}
-          </DashboardLayout>
-        </AuthProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <OfflineIndicator />
+            <DashboardLayout>
+              {children}
+            </DashboardLayout>
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
