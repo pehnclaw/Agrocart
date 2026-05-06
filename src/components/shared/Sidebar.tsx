@@ -10,48 +10,48 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const navItems = {
   ADMIN: [
-    { href: "/hq", label: "Control Tower", icon: "📡" },
-    { href: "/hq/hubs", label: "Hub Management", icon: "📍" },
-    { href: "/hq/dispatch", label: "Trip Dispatch", icon: "🗺️" },
-    { href: "/hq/users", label: "User Management", icon: "👥" },
-    { href: "/hub", label: "Hub View", icon: "🏭" },
-    { href: "/loadboard", label: "Load Board", icon: "🚛" },
-    { href: "/farmer", label: "Farmer View", icon: "🌾" },
+    { href: "/hq", labelKey: "nav_hq", icon: "📡" },
+    { href: "/hq/hubs", labelKey: "nav_hubs", icon: "📍" },
+    { href: "/hq/dispatch", labelKey: "nav_dispatch", icon: "🗺️" },
+    { href: "/hq/users", labelKey: "nav_users", icon: "👥" },
+    { href: "/hub", labelKey: "nav_hub_view", icon: "🏭" },
+    { href: "/loadboard", labelKey: "nav_loadboard", icon: "🚛" },
+    { href: "/farmer", labelKey: "nav_farmer_view", icon: "🌾" },
   ],
   HUB_MANAGER: [
-    { href: "/hub", label: "My Hub", icon: "🏭" },
+    { href: "/hub", labelKey: "nav_my_hub", icon: "🏭" },
   ],
   TRANSPORTER: [
-    { href: "/loadboard", label: "Load Board", icon: "🚛" },
+    { href: "/loadboard", labelKey: "nav_loadboard", icon: "🚛" },
   ],
   FARMER: [
-    { href: "/farmer", label: "My Dashboard", icon: "🌾" },
+    { href: "/farmer", labelKey: "nav_my_dashboard", icon: "🌾" },
   ],
 };
 
 // Bottom tab items for mobile — show only the most important 3-4 per role
 const mobileTabItems = {
   ADMIN: [
-    { href: "/hq", label: "Tower", icon: "📡" },
-    { href: "/hq/dispatch", label: "Dispatch", icon: "🗺️" },
-    { href: "/hq/hubs", label: "Hubs", icon: "📍" },
-    { href: "/hq/users", label: "Users", icon: "👥" },
+    { href: "/hq", labelKey: "nav_hq", icon: "📡" },
+    { href: "/hq/dispatch", labelKey: "nav_dispatch", icon: "🗺️" },
+    { href: "/hq/hubs", labelKey: "nav_hubs", icon: "📍" },
+    { href: "/hq/users", labelKey: "nav_users", icon: "👥" },
   ],
   HUB_MANAGER: [
-    { href: "/hub", label: "My Hub", icon: "🏭" },
+    { href: "/hub", labelKey: "nav_my_hub", icon: "🏭" },
   ],
   TRANSPORTER: [
-    { href: "/loadboard", label: "Loads", icon: "🚛" },
+    { href: "/loadboard", labelKey: "nav_loads", icon: "🚛" },
   ],
   FARMER: [
-    { href: "/farmer", label: "Dashboard", icon: "🌾" },
+    { href: "/farmer", labelKey: "nav_dashboard", icon: "🌾" },
   ],
 };
 
 export default function Sidebar() {
   const { userProfile } = useAuth();
   const pathname = usePathname();
-  const { language, setLanguage } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   if (!userProfile) return null;
@@ -86,7 +86,7 @@ export default function Sidebar() {
                 }`}
               >
                 <span className="text-lg">{item.icon}</span>
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             );
           })}
@@ -160,7 +160,7 @@ export default function Sidebar() {
                     }`}
                   >
                     <span className="text-lg">{item.icon}</span>
-                    {item.label}
+                    {t(item.labelKey)}
                   </Link>
                 );
               })}
@@ -206,7 +206,7 @@ export default function Sidebar() {
                 }`}
               >
                 <span className="text-xl leading-none">{tab.icon}</span>
-                <span className="text-[10px] font-medium">{tab.label}</span>
+                <span className="text-[10px] font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-[60px] text-center">{t(tab.labelKey)}</span>
               </Link>
             );
           })}

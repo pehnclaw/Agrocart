@@ -11,11 +11,11 @@ export default function TermsPage() {
         </Link>
         <div className="prose prose-slate max-w-none">
           <h1>Terms of Service (ToS) & Device Policy</h1>
-          <p className="text-muted"><strong>Last Updated:</strong> [Date]</p>
+          <p className="text-muted"><strong>Last Updated:</strong> May 2026</p>
           
           <h2>1. Acceptance of Terms</h2>
           <p>
-            By logging into Agrocart, you agree to be bound by these Terms. This App is an internal operational tool provided by [Company Name]. 
+            By logging into Agrocart, you agree to be bound by these Terms. This App is an internal operational tool provided by AgroCart Limited. 
             Unauthorized use, including attempting to access roles or data outside your authorization, is strictly prohibited.
           </p>
 
@@ -34,7 +34,7 @@ export default function TermsPage() {
           <h2>4. Financial Calculations & Liability</h2>
           <p>
             While Agrocart calculates estimated payouts based on inputted weights and grades, these digital receipts are for tracking purposes. 
-            Final financial disbursement is subject to [Company Name]'s standard accounting audits. [Company Name] is not liable for payout discrepancies caused by user input error.
+            Final financial disbursement is subject to AgroCart Limited's standard accounting audits. AgroCart Limited is not liable for payout discrepancies caused by user input error.
           </p>
 
           <h2>5. Termination of Access</h2>

@@ -26,13 +26,13 @@ export default function Home() {
             <span className="text-2xl font-bold text-primary tracking-tight">Agrocart</span>
           </Link>
 
-          <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-1 bg-surface-hover p-1 rounded-lg border border-border">
+          <div className="flex items-center gap-2 sm:gap-6">
+            <div className="flex items-center gap-1 bg-surface-hover p-1 rounded-lg border border-border">
               {(["en", "ha", "yo", "ig"] as const).map((lang) => (
                 <button
                   key={lang}
                   onClick={() => setLanguage(lang)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
+                  className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all ${
                     language === lang 
                       ? "bg-primary text-white shadow-sm" 
                       : "text-muted hover:text-foreground"
@@ -42,7 +42,7 @@ export default function Home() {
                 </button>
               ))}
             </div>
-            <Link href="/login" className="btn btn-outline py-2 px-6 text-sm font-bold border-2">
+            <Link href="/login" className="btn btn-outline py-1.5 sm:py-2 px-4 sm:px-6 text-xs sm:text-sm font-bold border-2 hidden sm:flex">
               {t("login")}
             </Link>
           </div>

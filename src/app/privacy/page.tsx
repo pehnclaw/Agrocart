@@ -11,11 +11,11 @@ export default function PrivacyPage() {
         </Link>
         <div className="prose prose-slate max-w-none">
           <h1>Privacy Policy</h1>
-          <p className="text-muted"><strong>Last Updated:</strong> [Date]</p>
+          <p className="text-muted"><strong>Last Updated:</strong> May 2026</p>
           
           <h2>Introduction</h2>
           <p>
-            Welcome to Agrocart (the "App"), operated by [Company Name] ("we," "our," or "us"). 
+            Welcome to Agrocart (the "App"), operated by AgroCart Limited ("we," "our," or "us"). 
             This Privacy Policy explains how we collect, use, store, and protect the personal and operational data generated through the App.
           </p>
 
@@ -45,7 +45,7 @@ export default function PrivacyPage() {
           <h2>Data Sharing</h2>
           <p>
             We do not sell, rent, or share operational or personal data with external third parties. 
-            Data is only accessible to authorized personnel within [Company Name] and our trusted cloud service provider (Google Cloud/Firebase) for the sole purpose of hosting the App.
+            Data is only accessible to authorized personnel within AgroCart Limited and our trusted cloud service provider (Google Cloud/Firebase) for the sole purpose of hosting the App.
           </p>
         </div>
       </div>

@@ -25,7 +25,18 @@ export const translations = {
     auth_create_account: "Create Account",
     auth_create_desc: "Join the Agrocart network today.",
     auth_dont_have_account: "Don't have an account?",
-    auth_already_have_account: "Already have an account?"
+    auth_already_have_account: "Already have an account?",
+    nav_hq: "Control Tower",
+    nav_hubs: "Hub Management",
+    nav_dispatch: "Trip Dispatch",
+    nav_users: "User Management",
+    nav_hub_view: "Hub View",
+    nav_loadboard: "Load Board",
+    nav_farmer_view: "Farmer View",
+    nav_my_hub: "My Hub",
+    nav_loads: "Loads",
+    nav_my_dashboard: "My Dashboard",
+    nav_dashboard: "Dashboard"
   },
   ha: {
     hero_title: "Haɗa amfanin gona na Najeriya da Duniya",
@@ -53,7 +64,18 @@ export const translations = {
     auth_create_account: "Ƙirƙiri Asusu",
     auth_create_desc: "Kasance tare da cibiyar sadarwar Agrocart a yau.",
     auth_dont_have_account: "Ba ku da asusu?",
-    auth_already_have_account: "Kuna da asusu?"
+    auth_already_have_account: "Kuna da asusu?",
+    nav_hq: "Hasumiya",
+    nav_hubs: "Gudanar da Hubs",
+    nav_dispatch: "Aika Tafiya",
+    nav_users: "Gudanar da Masu amfani",
+    nav_hub_view: "Duba Hub",
+    nav_loadboard: "Hukumar Kaya",
+    nav_farmer_view: "Duba Manomi",
+    nav_my_hub: "Hub Dina",
+    nav_loads: "Kaya",
+    nav_my_dashboard: "Dashboard Dina",
+    nav_dashboard: "Dashboard"
   },
   yo: {
     hero_title: "Nsopọ Ise Agbe Naijiria mọ Agbaye",
@@ -81,7 +103,18 @@ export const translations = {
     auth_create_account: "Ṣẹda Akọọlẹ",
     auth_create_desc: "Darapọ mọ nẹtiwọọki Agrocart loni.",
     auth_dont_have_account: "Ṣe o ko ni akọọlẹ kan?",
-    auth_already_have_account: "Ṣe o ti ni akọọlẹ kan?"
+    auth_already_have_account: "Ṣe o ti ni akọọlẹ kan?",
+    nav_hq: "Ile-iṣọ Iṣakoso",
+    nav_hubs: "Iṣakoso Hubs",
+    nav_dispatch: "Fifiranṣẹ Irin-ajo",
+    nav_users: "Iṣakoso Awọn Olumulo",
+    nav_hub_view: "Iwo Hub",
+    nav_loadboard: "Igbimọ Ẹru",
+    nav_farmer_view: "Iwo Agbẹ",
+    nav_my_hub: "Hub Mi",
+    nav_loads: "Awọn Ẹru",
+    nav_my_dashboard: "Dasibodu Mi",
+    nav_dashboard: "Dasibodu"
   },
   ig: {
     hero_title: "Ijikọ owuwe ihe ubi Nigeria na Ụwa",
@@ -109,6 +142,17 @@ export const translations = {
     auth_create_account: "Mepụta Akaụntụ",
     auth_create_desc: "Soro netwọk Agrocart taa.",
     auth_dont_have_account: "Ị nweghị akaụntụ?",
-    auth_already_have_account: "Ị nwere akaụntụ?"
+    auth_already_have_account: "Ị nwere akaụntụ?",
+    nav_hq: "Ụlọ Elu Nchịkwa",
+    nav_hubs: "Nchịkwa Hubs",
+    nav_dispatch: "Nzipu Njem",
+    nav_users: "Nchịkwa Ndị Ọrụ",
+    nav_hub_view: "Nlele Hub",
+    nav_loadboard: "Bọọdụ Ibu",
+    nav_farmer_view: "Nlele Onye Ọrụ Ugbo",
+    nav_my_hub: "Hub m",
+    nav_loads: "Ibu",
+    nav_my_dashboard: "Dashboard m",
+    nav_dashboard: "Dashboard"
   }
 };
