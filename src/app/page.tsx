@@ -42,9 +42,11 @@ export default function Home() {
                 </button>
               ))}
             </div>
-            <Link href="/login" className="btn btn-outline py-1.5 sm:py-2 px-4 sm:px-6 text-xs sm:text-sm font-bold border-2 hidden md:flex">
-              {t("login")}
-            </Link>
+            <div className="hidden md:block">
+              <Link href="/login" className="btn btn-outline py-2 px-6 text-sm font-bold border-2">
+                {t("login")}
+              </Link>
+            </div>
           </div>
         </div>
       </header>
