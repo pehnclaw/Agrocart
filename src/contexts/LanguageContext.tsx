@@ -15,6 +15,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>("en");
+  const [mounted, setMounted] = useState(false);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -22,6 +23,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (saved && ["en", "ha", "yo", "ig"].includes(saved)) {
       setLanguageState(saved);
     }
+    setMounted(true);
   }, []);
 
   const setLanguage = (lang: Language) => {
@@ -31,7 +33,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // Basic translation helper (will be expanded in translations.ts)
   const t = (key: string) => {
-    return (translations[language] as any)[key] || key; 
+    // During SSR, default to English to prevent hydration errors.
+    // Once mounted, use the actual selected language.
+    const activeLang = mounted ? language : "en";
+    return (translations[activeLang] as any)[key] || key; 
   };
 
   return (

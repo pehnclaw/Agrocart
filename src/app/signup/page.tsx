@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
 
-export default function LoginPage() {
+export default function SignupPage() {
   const { firebaseUser, userProfile, loading, isNewUser } = useAuth();
   const { t } = useLanguage();
   const router = useRouter();
@@ -88,24 +88,24 @@ export default function LoginPage() {
         <div className="w-full max-w-sm">
           <div className="mb-8">
             <h1 className="text-3xl font-extrabold mb-2">
-              {t("auth_welcome_back")}
+              {t("auth_create_account")}
             </h1>
             <p className="text-muted">
-              {t("auth_welcome_desc")}
+              {t("auth_create_desc")}
             </p>
           </div>
 
           <div className="card glass p-6 border-2 border-primary/10 shadow-xl shadow-primary/5">
-            <PhoneLoginForm isSignUpMode={false} />
+            <PhoneLoginForm isSignUpMode={true} />
           </div>
 
           <p className="mt-8 text-center text-sm text-muted">
-            {t("auth_dont_have_account")}{" "}
+            {t("auth_already_have_account")}{" "}
             <Link 
-              href="/signup"
+              href="/login"
               className="text-primary font-bold hover:underline"
             >
-              {t("signup")}
+              {t("login")}
             </Link>
           </p>
         </div>

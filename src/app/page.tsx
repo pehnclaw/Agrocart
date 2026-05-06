@@ -185,8 +185,8 @@ export default function Home() {
           </div>
           <p className="text-muted text-sm">{t("footer_text")}</p>
           <div className="flex gap-6 text-sm font-bold">
-            <Link href="#" className="hover:text-primary">Privacy</Link>
-            <Link href="#" className="hover:text-primary">Terms</Link>
+            <Link href="/privacy" className="hover:text-primary">{t("privacy_policy")}</Link>
+            <Link href="/terms" className="hover:text-primary">{t("terms_of_service")}</Link>
             <Link href="#" className="hover:text-primary">Contact</Link>
           </div>
         </div>

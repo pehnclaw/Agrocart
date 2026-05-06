@@ -15,8 +15,17 @@ export const translations = {
     feature_tracking: "Real-time Tracking",
     feature_escrow: "Escrow Security",
     footer_text: "© 2026 Agrocart. All rights reserved.",
-    login: "Login",
-    select_language: "Select Language"
+    login: "Sign In",
+    signup: "Sign Up",
+    select_language: "Select Language",
+    privacy_policy: "Privacy Policy",
+    terms_of_service: "Terms of Service",
+    auth_welcome_back: "Welcome Back",
+    auth_welcome_desc: "Enter your phone number to sign in securely.",
+    auth_create_account: "Create Account",
+    auth_create_desc: "Join the Agrocart network today.",
+    auth_dont_have_account: "Don't have an account?",
+    auth_already_have_account: "Already have an account?"
   },
   ha: {
     hero_title: "Haɗa amfanin gona na Najeriya da Duniya",
@@ -35,7 +44,16 @@ export const translations = {
     feature_escrow: "Amintaccen biyan kuɗi",
     footer_text: "© 2026 Agrocart. An kiyaye duk haƙƙoƙi.",
     login: "Shiga",
-    select_language: "Zaɓi Harshe"
+    signup: "Yi Rajista",
+    select_language: "Zaɓi Harshe",
+    privacy_policy: "Siyasar Sirri",
+    terms_of_service: "Ka'idojin Sabis",
+    auth_welcome_back: "Barka da Dawowa",
+    auth_welcome_desc: "Shigar da lambar wayarka don shiga cikin aminci.",
+    auth_create_account: "Ƙirƙiri Asusu",
+    auth_create_desc: "Kasance tare da cibiyar sadarwar Agrocart a yau.",
+    auth_dont_have_account: "Ba ku da asusu?",
+    auth_already_have_account: "Kuna da asusu?"
   },
   yo: {
     hero_title: "Nsopọ Ise Agbe Naijiria mọ Agbaye",
@@ -54,7 +72,16 @@ export const translations = {
     feature_escrow: "Aabo sisanwo",
     footer_text: "© 2026 Agrocart. Gbogbo awọn ẹtọ wa ni ipamọ.",
     login: "Wọle",
-    select_language: "Yan Ede"
+    signup: "Forukọsilẹ",
+    select_language: "Yan Ede",
+    privacy_policy: "Eto Asiri",
+    terms_of_service: "Awọn ofin Iṣẹ",
+    auth_welcome_back: "Kabo Pada",
+    auth_welcome_desc: "Tẹ nọmba foonu rẹ sii lati wọle ni aabo.",
+    auth_create_account: "Ṣẹda Akọọlẹ",
+    auth_create_desc: "Darapọ mọ nẹtiwọọki Agrocart loni.",
+    auth_dont_have_account: "Ṣe o ko ni akọọlẹ kan?",
+    auth_already_have_account: "Ṣe o ti ni akọọlẹ kan?"
   },
   ig: {
     hero_title: "Ijikọ owuwe ihe ubi Nigeria na Ụwa",
@@ -73,6 +100,15 @@ export const translations = {
     feature_escrow: "Nchebe ịkwụ ụgwọ",
     footer_text: "© 2026 Agrocart. Ikike niile echekwara.",
     login: "Banye",
-    select_language: "Họrọ Asụsụ"
+    signup: "Debanye aha",
+    select_language: "Họrọ Asụsụ",
+    privacy_policy: "Amụma Nzuzo",
+    terms_of_service: "Usoro Ọrụ",
+    auth_welcome_back: "Nnọọ Lọghachi",
+    auth_welcome_desc: "Tinye nọmba ekwentị gị ka ịbanye n'enweghị nsogbu.",
+    auth_create_account: "Mepụta Akaụntụ",
+    auth_create_desc: "Soro netwọk Agrocart taa.",
+    auth_dont_have_account: "Ị nweghị akaụntụ?",
+    auth_already_have_account: "Ị nwere akaụntụ?"
   }
 };
