@@ -12,6 +12,8 @@ const navItems = {
   ADMIN: [
     { href: "/hq", labelKey: "nav_hq", icon: "📡" },
     { href: "/hq/analytics", labelKey: "nav_analytics", icon: "📊" },
+    { href: "/hq/fleet", labelKey: "nav_fleet", icon: "🗺️" },
+    { href: "/hq/vault", labelKey: "nav_vault", icon: "🛡️" },
     { href: "/hq/hubs", labelKey: "nav_hubs", icon: "📍" },
     { href: "/hq/dispatch", labelKey: "nav_dispatch", icon: "🗺️" },
     { href: "/hq/users", labelKey: "nav_users", icon: "👥" },
@@ -21,6 +23,7 @@ const navItems = {
   ],
   HUB_MANAGER: [
     { href: "/hub", labelKey: "nav_my_hub", icon: "🏭" },
+    { href: "/hub/inventory", labelKey: "nav_inventory", icon: "📦" },
   ],
   TRANSPORTER: [
     { href: "/loadboard", labelKey: "nav_loadboard", icon: "🚛" },

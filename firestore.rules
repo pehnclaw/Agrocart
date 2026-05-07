@@ -1,62 +1,68 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Functions
-    function isAuthenticated() {
+    // Helper Functions
+    function isSignedIn() {
       return request.auth != null;
     }
     
-    function getUserRole() {
-      // Allow if admin, otherwise check role. Need get() to read from users collection.
-      // Careful with get() in rules, it costs a read.
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
     }
     
-    function isAdmin() {
-      return isAuthenticated() && getUserRole() == 'ADMIN';
+    function hasRole(role) {
+      return isSignedIn() && getUserData().role == role;
     }
 
-    // 1. Users Collection
+    // --- User Profiles ---
     match /users/{userId} {
-      // Anyone authenticated can read user profiles (needed for dropdowns, names)
-      allow read: if isAuthenticated();
-      // Users can write to their own profile, Admins can write to any profile
-      allow write: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow read: if isSignedIn();
+      allow write: if request.auth.uid == userId || hasRole('ADMIN');
     }
 
-    // 2. Hubs Collection
+    // --- Hubs ---
     match /hubs/{hubId} {
-      // Anyone authenticated can read the list of hubs (needed for map and dropdowns)
-      allow read: if isAuthenticated();
-      // Only Admins can create or modify hubs
-      allow write: if isAdmin();
+      allow read: if isSignedIn();
+      allow write: if hasRole('ADMIN');
     }
 
-    // 3. Batches Collection
+    // --- Produce Batches ---
     match /batches/{batchId} {
-      // Anyone authenticated can read batches (needed for Loadboard pooling and Farmer tracking)
-      allow read: if isAuthenticated();
-      // Hub Managers can create/update batches. Admins can update.
-      // (We allow broader write for MVP, ideally we restrict to originHubId == their hub)
-      allow write: if isAuthenticated() && (getUserRole() == 'HUB_MANAGER' || isAdmin());
+      allow read: if isSignedIn() && (
+        hasRole('ADMIN') || 
+        getUserData().hubId == resource.data.originHubId ||
+        getUserData().phoneNumber == resource.data.farmerPhone ||
+        resource.data.status == 'IN_TRANSIT'
+      );
+      
+      allow create: if hasRole('HUB_MANAGER') || hasRole('ADMIN');
+      
+      allow update: if hasRole('ADMIN') || (
+        hasRole('HUB_MANAGER') && getUserData().hubId == resource.data.originHubId
+      );
     }
 
-    // 4. Trips Collection
+    // --- Trips / Loads ---
     match /trips/{tripId} {
-      // Anyone authenticated can read trips
-      allow read: if isAuthenticated();
-      // Admins can create/edit. Transporters can accept (update). Hub Managers can receive (update).
-      allow write: if isAuthenticated() && (isAdmin() || getUserRole() == 'TRANSPORTER' || getUserRole() == 'HUB_MANAGER');
+      allow read: if isSignedIn();
+      
+      allow create: if hasRole('ADMIN');
+      
+      allow update: if hasRole('ADMIN') || (
+        hasRole('TRANSPORTER') && (
+          resource.data.status == 'PENDING_BID' || 
+          resource.data.vehicleId == request.auth.uid
+        )
+      ) || (
+        hasRole('HUB_MANAGER') && getUserData().hubId == resource.data.destinationHubId
+      );
     }
 
-    // 5. Live Locations
-    match /live_locations/{locationId} {
-      // Admins and Transporters can read
-      allow read: if isAuthenticated();
-      // Only the specific transporter can write their own location
-      allow write: if isAuthenticated() && request.auth.uid == locationId;
+    // --- Notifications ---
+    match /notifications/{notifId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn(); // Allow app to trigger notifications
     }
   }
 }
