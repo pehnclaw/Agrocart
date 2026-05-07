@@ -6,6 +6,8 @@ import { db } from "@/lib/firebase/config";
 import { ProduceBatch, Trip, Hub } from "@/types";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { v4 as uuidv4 } from "uuid";
+import { sendAgrocartSMS } from "@/lib/sms";
+import { getDocs, collection, query, where } from "firebase/firestore";
 
 export default function DispatchPage() {
   const [hubs, setHubs] = useState<Hub[]>([]);
@@ -20,6 +22,7 @@ export default function DispatchPage() {
   const [selectedBatches, setSelectedBatches] = useState<string[]>([]);
   const [price, setPrice] = useState("");
   const [saving, setSaving] = useState(false);
+  const [smartBroadcast, setSmartBroadcast] = useState(true);
 
   useEffect(() => {
     const unsubHubs = onSnapshot(collection(db, "hubs"), (snapshot) => {
@@ -79,6 +82,26 @@ export default function DispatchPage() {
       // Update batch statuses to reflect they're queued for transport
       for (const batchId of selectedBatches) {
         await updateDoc(doc(db, "batches", batchId), { status: "IN_TRANSIT", updatedAt: Date.now() });
+      }
+
+      // Smart Broadcast: Find verified transporters and notify them
+      if (smartBroadcast) {
+        const transportersQ = query(
+          collection(db, "users"), 
+          where("role", "==", "TRANSPORTER"),
+          where("verificationStatus", "==", "VERIFIED")
+        );
+        const transportersSnapshot = await getDocs(transportersQ);
+        const transporters = transportersSnapshot.docs.map(d => d.data());
+        
+        const message = `Agrocart: New Load available! ${getHubName(originHubId)} → ${getHubName(destinationHubId)}. Payout: ₦${Number(price).toLocaleString()}. Log in to accept.`;
+        
+        // In production, we'd batch this or use a Cloud Function
+        for (const t of transporters) {
+          if (t.phoneNumber) {
+            await sendAgrocartSMS(t.phoneNumber, message);
+          }
+        }
       }
 
       setShowForm(false);
@@ -171,6 +194,19 @@ export default function DispatchPage() {
                     ))}
                   </div>
                 )}
+              </div>
+
+              <div className="flex items-center gap-2 mb-6">
+                <input 
+                  type="checkbox" 
+                  id="broadcast" 
+                  checked={smartBroadcast} 
+                  onChange={(e) => setSmartBroadcast(e.target.checked)}
+                  className="w-4 h-4 accent-primary"
+                />
+                <label htmlFor="broadcast" className="text-sm font-bold text-primary flex items-center gap-2">
+                  🚀 Enable Smart Broadcast (Notify Verified Transporters via SMS)
+                </label>
               </div>
 
               <button type="submit" className="btn btn-primary" disabled={saving || selectedBatches.length === 0}>

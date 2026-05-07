@@ -34,6 +34,10 @@ const navItems = {
   FARMER: [
     { href: "/farmer", labelKey: "nav_my_dashboard", icon: "🌾" },
   ],
+  CORPORATE_BUYER: [
+    { href: "/corporate/dashboard", labelKey: "nav_corp_dashboard", icon: "🏢" },
+    { href: "/corporate/orders", labelKey: "nav_corp_orders", icon: "📝" },
+  ],
 };
 
 // Bottom tab items for mobile — show only the most important 3-4 per role

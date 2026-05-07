@@ -43,6 +43,8 @@ export const translations = {
     nav_inventory: "Stock Inventory",
     nav_loads: "Loads",
     nav_my_dashboard: "My Dashboard",
+    nav_corp_dashboard: "Procurement HQ",
+    nav_corp_orders: "Purchase Orders",
     nav_dashboard: "Dashboard"
   },
   ha: {
@@ -89,6 +91,8 @@ export const translations = {
     nav_inventory: "Kayan Abinci",
     nav_loads: "Kaya",
     nav_my_dashboard: "Dashboard Dina",
+    nav_corp_dashboard: "Hukumar Saye",
+    nav_corp_orders: "Odar Saye",
     nav_dashboard: "Dashboard"
   },
   yo: {
@@ -135,6 +139,8 @@ export const translations = {
     nav_inventory: "Ọja Ọja",
     nav_loads: "Awọn Ẹru",
     nav_my_dashboard: "Dasibodu Mi",
+    nav_corp_dashboard: "Ile-iṣẹ rira",
+    nav_corp_orders: "Awọn aṣẹ rira",
     nav_dashboard: "Dasibodu"
   },
   ig: {
@@ -181,6 +187,8 @@ export const translations = {
     nav_inventory: "Ngwa Ahịa",
     nav_loads: "Ibu",
     nav_my_dashboard: "Dashboard m",
+    nav_corp_dashboard: "Isi Nweta",
+    nav_corp_orders: "Iwu Ịzụta",
     nav_dashboard: "Dashboard"
   }
 };

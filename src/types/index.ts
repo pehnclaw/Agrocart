@@ -1,5 +1,5 @@
 // Role Definitions
-export type UserRole = "ADMIN" | "HUB_MANAGER" | "TRANSPORTER" | "FARMER";
+export type UserRole = "ADMIN" | "HUB_MANAGER" | "TRANSPORTER" | "FARMER" | "CORPORATE_BUYER";
 
 // Base Document Type
 export interface BaseDocument {
@@ -70,4 +70,15 @@ export interface Trip extends BaseDocument {
   payoutStatus?: "PENDING" | "PAID";
   payoutReference?: string; // Bank transfer reference
   payoutDate?: number;
+}
+
+// Purchase Order (Firestore: /orders/{orderId})
+export interface PurchaseOrder extends BaseDocument {
+  buyerId: string; // Corporate User ID
+  cropType: string;
+  targetQuantityKg: number;
+  currentQuantityKg: number;
+  status: "OPEN" | "FULFILLED" | "CANCELLED";
+  pricePerKg: number;
+  deliveryLocation: string;
 }

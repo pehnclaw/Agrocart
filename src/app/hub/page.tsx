@@ -4,6 +4,7 @@ import IntakeForm from "@/components/hub/IntakeForm";
 import RecentIntakes from "@/components/hub/RecentIntakes";
 import IncomingDeliveries from "@/components/hub/IncomingDeliveries";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import WeatherAlert from "@/components/shared/WeatherAlert";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function HubDashboard() {
@@ -18,6 +19,10 @@ export default function HubDashboard() {
             Welcome, <span className="font-semibold text-foreground">{userProfile?.fullName}</span>. Works offline!
           </p>
         </header>
+
+        <section className="mb-8">
+          <WeatherAlert location={userProfile?.hubId || "Regional Hub"} />
+        </section>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <section className="card p-6 glass md:col-span-3 h-fit">
