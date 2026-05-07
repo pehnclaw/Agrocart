@@ -27,6 +27,12 @@ export default function AvailableLoads() {
 
   const handleAcceptLoad = async (tripId: string) => {
     if (!firebaseUser) return;
+    
+    if (userProfile?.verificationStatus !== "VERIFIED") {
+      alert("Verification Required: Please upload your documents and wait for HQ approval before accepting loads.");
+      return;
+    }
+
     setAccepting(tripId);
 
     try {
@@ -82,13 +88,22 @@ export default function AvailableLoads() {
           
           <div className="flex justify-between items-center">
             <p className="text-sm text-muted">{load.batchIds.length} Batches</p>
-            <button 
-              onClick={() => handleAcceptLoad(load.id)}
-              disabled={accepting === load.id}
-              className="btn btn-primary text-sm py-2 px-4"
-            >
-              {accepting === load.id ? "Accepting..." : "Accept Load"}
-            </button>
+            <div className="flex flex-col gap-2">
+              <button 
+                onClick={() => handleAcceptLoad(load.id)}
+                disabled={accepting === load.id}
+                className={`btn py-2 px-4 text-sm ${
+                  userProfile?.verificationStatus === "VERIFIED" 
+                    ? "btn-primary" 
+                    : "btn-outline border-muted text-muted cursor-not-allowed"
+                }`}
+              >
+                {accepting === load.id ? "Accepting..." : "Accept Load"}
+              </button>
+              {userProfile?.verificationStatus !== "VERIFIED" && (
+                <p className="text-[10px] text-danger font-bold text-center">🆔 KYC VERIFICATION REQUIRED</p>
+              )}
+            </div>
           </div>
         </div>
       ))}

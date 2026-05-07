@@ -78,6 +78,28 @@ export default function IncomingDeliveries() {
     }
   };
 
+  const handleDispute = async (trip: Trip) => {
+    const reason = window.prompt("Why are you disputing this delivery? (e.g. Damaged goods, incorrect weight)");
+    if (!reason) return;
+
+    setReceivingId(trip.id);
+    try {
+      await updateDoc(doc(db, "trips", trip.id), {
+        status: "DELIVERED", // Still delivered but disputed
+        escrowStatus: "DISPUTED",
+        disputeReason: reason,
+        disputedAt: Date.now(),
+        updatedAt: Date.now()
+      });
+      alert("Dispute filed. HQ will review the evidence.");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to file dispute.");
+    } finally {
+      setReceivingId(null);
+    }
+  };
+
   if (loading) {
     return <p className="text-muted animate-pulse">Scanning for incoming trucks...</p>;
   }
@@ -111,13 +133,22 @@ export default function IncomingDeliveries() {
             <p><span className="text-muted">Payload:</span> {trip.batchIds.length} Batches</p>
           </div>
 
-          <button 
-            onClick={() => handleReceiveDelivery(trip)}
-            disabled={receivingId === trip.id}
-            className="btn btn-primary w-full py-3 text-sm shadow-md"
-          >
-            {receivingId === trip.id ? "Processing Handshake..." : "Verify & Receive Delivery"}
-          </button>
+          <div className="flex gap-3">
+            <button 
+              onClick={() => handleDispute(trip)}
+              disabled={receivingId === trip.id}
+              className="flex-1 btn btn-outline border-danger text-danger py-3 text-sm"
+            >
+              Dispute
+            </button>
+            <button 
+              onClick={() => handleReceiveDelivery(trip)}
+              disabled={receivingId === trip.id}
+              className="flex-2 btn btn-primary py-3 text-sm shadow-md"
+            >
+              {receivingId === trip.id ? "Processing..." : "Verify & Receive"}
+            </button>
+          </div>
         </div>
       ))}
     </div>

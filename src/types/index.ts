@@ -15,6 +15,8 @@ export interface User extends BaseDocument {
   fullName?: string;
   hubId?: string; // If role is HUB_MANAGER, which hub they manage
   fcmToken?: string; // For push notifications
+  verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
+  documentUrls?: string[]; // IDs/CAC documents
 }
 
 // Hub Document (Firestore: /hubs/{hubId})
@@ -52,6 +54,8 @@ export interface Vehicle extends BaseDocument {
   capacityTons: number;
   ownerId: string; // Transporter User ID
   driverPhone: string;
+  verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
+  documentUrls?: string[]; // License/Insurance photos
 }
 
 // Trip/Load (Firestore: /trips/{tripId})
@@ -63,4 +67,7 @@ export interface Trip extends BaseDocument {
   status: "PENDING_BID" | "ACCEPTED" | "IN_TRANSIT" | "DELIVERED";
   agreedPrice: number;
   escrowStatus: "HELD" | "RELEASED" | "DISPUTED";
+  payoutStatus?: "PENDING" | "PAID";
+  payoutReference?: string; // Bank transfer reference
+  payoutDate?: number;
 }
