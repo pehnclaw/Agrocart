@@ -6,6 +6,7 @@ import { db } from "@/lib/firebase/config";
 import { ProduceBatch } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { exportToCSV } from "@/lib/export";
 
 export default function HubInventoryPage() {
   const { userProfile } = useAuth();
@@ -36,6 +37,18 @@ export default function HubInventoryPage() {
     return () => unsubscribe();
   }, [userProfile]);
 
+  const handleExport = () => {
+    const exportData = batches.map(b => ({
+      BatchID: b.id,
+      Crop: b.cropType,
+      WeightKg: b.weightKg,
+      Grade: b.grade,
+      IntakeDate: new Date(b.createdAt).toLocaleDateString(),
+      Status: b.status
+    }));
+    exportToCSV(exportData, "Hub_Inventory_Stock");
+  };
+
   const getAgingInfo = (createdAt: number) => {
     const days = Math.floor((Date.now() - createdAt) / (1000 * 60 * 60 * 24));
     if (days >= 7) return { label: `${days} Days (Critical)`, color: "text-danger bg-danger-light" };
@@ -46,9 +59,14 @@ export default function HubInventoryPage() {
   return (
     <ProtectedRoute allowedRoles={["HUB_MANAGER", "ADMIN"]}>
       <main className="p-4 md:p-8 animate-fade-in">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold text-primary">Live Hub Inventory</h1>
-          <p className="text-muted">Manage real-time stock levels and track produce aging.</p>
+        <header className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-primary">Live Hub Inventory</h1>
+            <p className="text-muted">Manage real-time stock levels and track produce aging.</p>
+          </div>
+          <button onClick={handleExport} className="btn btn-outline text-xs py-1.5 px-4">
+            📥 Export Stock List (.csv)
+          </button>
         </header>
 
         {loading ? (

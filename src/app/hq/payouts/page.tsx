@@ -5,6 +5,7 @@ import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/f
 import { db } from "@/lib/firebase/config";
 import { Trip } from "@/types";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { exportToCSV } from "@/lib/export";
 
 export default function PayoutsPage() {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -50,6 +51,18 @@ export default function PayoutsPage() {
     }
   };
 
+  const handleExport = () => {
+    const exportData = filteredTrips.map(t => ({
+      TripID: t.id,
+      Date: new Date(t.updatedAt).toLocaleDateString(),
+      Amount: t.agreedPrice,
+      Escrow: t.escrowStatus,
+      Payout: t.payoutStatus || "PENDING",
+      Reference: t.payoutReference || "N/A"
+    }));
+    exportToCSV(exportData, "Agrocart_Payouts");
+  };
+
   const filteredTrips = trips.filter(t => {
     if (filter === "ALL") return true;
     if (filter === "PAID") return t.payoutStatus === "PAID";
@@ -67,6 +80,9 @@ export default function PayoutsPage() {
           <div>
             <h1 className="text-3xl font-bold text-primary">Financial Ledger</h1>
             <p className="text-muted">Manage escrow disbursements and payout reconciliations.</p>
+            <button onClick={handleExport} className="btn btn-outline text-[10px] mt-4 py-1.5">
+              📥 Export Report (.csv)
+            </button>
           </div>
           
           <div className="card px-6 py-4 bg-primary text-white shadow-xl shadow-primary/20 flex flex-col items-center">

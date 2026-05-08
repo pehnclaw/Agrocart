@@ -23,6 +23,7 @@ export default function DispatchPage() {
   const [price, setPrice] = useState("");
   const [saving, setSaving] = useState(false);
   const [smartBroadcast, setSmartBroadcast] = useState(true);
+  const [tripType, setTripType] = useState<"MARKET_DELIVERY" | "INTERNAL_TRANSFER">("MARKET_DELIVERY");
 
   useEffect(() => {
     const unsubHubs = onSnapshot(collection(db, "hubs"), (snapshot) => {
@@ -70,6 +71,7 @@ export default function DispatchPage() {
         id: tripId,
         originHubId,
         destinationHubId,
+        type: tripType,
         batchIds: selectedBatches,
         status: "PENDING_BID",
         agreedPrice: Number(price),
@@ -142,20 +144,49 @@ export default function DispatchPage() {
           <div className="card glass p-6 mb-8 animate-fade-in">
             <h2 className="text-xl font-semibold mb-4">New Trip</h2>
             <form onSubmit={handleCreateTrip}>
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-1">Origin Hub *</label>
+                <select required className="input" value={originHubId} onChange={(e) => { setOriginHubId(e.target.value); setSelectedBatches([]); }}>
+                  <option value="">Select origin...</option>
+                  {hubs.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
+                </select>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Origin Hub *</label>
-                  <select required className="input" value={originHubId} onChange={(e) => { setOriginHubId(e.target.value); setSelectedBatches([]); }}>
-                    <option value="">Select origin...</option>
-                    {hubs.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
+                  <label className="block text-sm font-medium mb-1">Trip Type *</label>
+                  <select 
+                    className="input" 
+                    value={tripType} 
+                    onChange={(e) => setTripType(e.target.value as any)}
+                  >
+                    <option value="MARKET_DELIVERY">External Delivery (Market)</option>
+                    <option value="INTERNAL_TRANSFER">Internal Transfer (Hub-to-Hub)</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Destination Hub *</label>
-                  <select required className="input" value={destinationHubId} onChange={(e) => setDestinationHubId(e.target.value)}>
-                    <option value="">Select destination...</option>
-                    {hubs.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
-                  </select>
+                  <label className="block text-sm font-medium mb-1">Destination {tripType === "INTERNAL_TRANSFER" ? "Hub" : ""} *</label>
+                  {tripType === "INTERNAL_TRANSFER" ? (
+                    <select
+                      required
+                      className="input"
+                      value={destinationHubId}
+                      onChange={(e) => setDestinationHubId(e.target.value)}
+                    >
+                      <option value="">Select destination hub...</option>
+                      {hubs.filter(h => h.id !== originHubId).map(h => (
+                        <option key={h.id} value={h.id}>{h.name}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input 
+                      required 
+                      type="text" 
+                      className="input" 
+                      placeholder="e.g. Lagos Central Market" 
+                      value={destinationHubId} 
+                      onChange={(e) => setDestinationHubId(e.target.value)} 
+                    />
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Agreed Price (₦) *</label>

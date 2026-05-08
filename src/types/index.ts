@@ -67,6 +67,7 @@ export interface Trip extends BaseDocument {
   status: "PENDING_BID" | "ACCEPTED" | "IN_TRANSIT" | "DELIVERED";
   agreedPrice: number;
   escrowStatus: "HELD" | "RELEASED" | "DISPUTED";
+  type: "MARKET_DELIVERY" | "INTERNAL_TRANSFER";
   payoutStatus?: "PENDING" | "PAID";
   payoutReference?: string; // Bank transfer reference
   payoutDate?: number;

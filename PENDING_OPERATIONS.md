@@ -33,6 +33,25 @@ This document tracks all features, integrations, and compliance steps that have 
 *   **Status**: Postponed (Only UI Skeleton is translated).
 *   **Reason**: While the infrastructure for Hausa, Yoruba, and Igbo is ready, the actual technical agro-logistics terminology requires review by native speakers to ensure cultural and professional accuracy.
 
-## 8. Multi-Truck Fleet Management
-*   **Status**: Postponed (Currently 1 Transporter = 1 Vehicle model).
-*   **Reason**: Adding a "Fleet Owner" role (who manages 10+ drivers) adds significant complexity to the database schema. The current version focuses on independent transporters.
+## 9. Future Strategic Inputs (Roadmap)
+
+### Hardware Integration (Zero-Fraud Hub)
+- **Requirement**: BLE (Bluetooth Low Energy) Industrial Scales.
+- **Tech Stack**: Web Bluetooth API.
+- **Goal**: Auto-capture weight during intake to eliminate manual entry fraud.
+
+### Satellite Crop Surveillance
+- **Requirement**: Data Subscription (e.g., AgroMonitoring or Planet API).
+- **Tech Stack**: REST API + NDVI Index Mapping.
+- **Goal**: Predict harvest surges/failures before produce arrives at hubs.
+
+### "Agro-Fin" Fintech Layer
+- **Requirement**: Partnership with Mono/Okra (KYC) and Paystack/Flutterwave (Payouts).
+- **Compliance**: CAC Registration, AML/KYC policies.
+- **Goal**: Instant transporter payouts and farmer micro-lending based on Agro-Score.
+
+### Supply Chain Digital Twin
+- **Requirement**: 3D GLTF/OBJ assets of physical hub infrastructure.
+- **Tech Stack**: Three.js / React Three Fiber.
+- **Goal**: Real-time 3D visualization of silo capacity and network flow at HQ.
+
