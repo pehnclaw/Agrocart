@@ -118,7 +118,7 @@ export default function IntakeForm() {
         
         <div className="bg-white p-4 rounded-xl shadow-sm mb-6 inline-block">
           <QRCodeSVG 
-            value={successBatchId} 
+            value={`${window.location.origin}/trace/${successBatchId}`} 
             size={200}
             level="H"
             includeMargin={true}

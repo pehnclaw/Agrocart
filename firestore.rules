@@ -23,13 +23,15 @@ service cloud.firestore {
 
     // --- Hubs ---
     match /hubs/{hubId} {
-      allow read: if isSignedIn();
+      allow get: if true; // Allow public traceability
+      allow list: if isSignedIn();
       allow write: if hasRole('ADMIN');
     }
 
     // --- Produce Batches ---
     match /batches/{batchId} {
-      allow read: if isSignedIn() && (
+      allow get: if true; // Allow public traceability
+      allow list: if isSignedIn() && (
         hasRole('ADMIN') || 
         getUserData().hubId == resource.data.originHubId ||
         getUserData().phoneNumber == resource.data.farmerPhone ||
