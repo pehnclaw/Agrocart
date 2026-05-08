@@ -7,6 +7,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell, LineChart, Line, Legend 
 } from "recharts";
+import { predictHubDemand, getConfidenceScore } from "@/lib/ai-predict";
 
 const COLORS = ["#16a34a", "#f59e0b", "#166534", "#ef4444", "#64748b"];
 
@@ -40,7 +41,12 @@ export default function AnalyticsPage() {
           cropMap[crop] = (cropMap[crop] || 0) + 1;
         });
 
+        const prediction = predictHubDemand(batches as any);
+        const confidence = getConfidenceScore(batches as any);
+
         setData({
+          prediction,
+          confidence,
           tonnageByHub: Object.entries(hubMap).map(([name, value]) => ({ name, value })),
           cropDistribution: Object.entries(cropMap).map(([name, value]) => ({ name, value })),
           monthlyGrowth: [
@@ -85,8 +91,8 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
           { label: "Total Network Tonnage", value: "482.5 Tons", trend: "+12%", color: "text-primary" },
+          { label: "Predicted Next Week", value: `${(data.prediction / 1000).toFixed(1)} Tons`, trend: data.confidence, color: "text-accent" },
           { label: "Active Hubs", value: "14 Units", trend: "0%", color: "text-accent" },
-          { label: "Verified Transporters", value: "86 Drivers", trend: "+5%", color: "text-primary-dark" },
           { label: "Avg Handshake Time", value: "4.2 Hrs", trend: "-15%", color: "text-primary" },
         ].map((kpi, i) => (
           <div key={i} className="card p-6 bg-surface shadow-sm border border-border">

@@ -7,11 +7,14 @@ import { ProduceBatch, PurchaseOrder } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { getTotalCarbonOffset } from "@/lib/carbon";
+import { collection as firestoreCollection, getDocs } from "firebase/firestore";
 
 export default function CorporateDashboard() {
   const { userProfile } = useAuth();
   const [orders, setOrders] = useState<PurchaseOrder[]>([]);
   const [availableStock, setAvailableStock] = useState<ProduceBatch[]>([]);
+  const [totalTrips, setTotalTrips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,8 +44,17 @@ export default function CorporateDashboard() {
       setLoading(false);
     });
 
+    // 3. Fetch fulfilled trips to calculate Carbon (Simulation)
+    async function fetchTrips() {
+      const snap = await getDocs(firestoreCollection(db, "trips"));
+      setTotalTrips(snap.docs.map(d => d.data()));
+    }
+    fetchTrips();
+
     return () => { unsubOrders(); unsubStock(); };
   }, [userProfile]);
+
+  const carbon = getTotalCarbonOffset(totalTrips);
 
   const procurementData = orders.map(o => ({
     name: o.cropType,
@@ -82,10 +94,9 @@ export default function CorporateDashboard() {
               <h2 className="text-5xl font-black">{orders.filter(o => o.status === "OPEN").length}</h2>
             </div>
             <div className="pt-6 border-t border-white/20">
-              <p className="text-xs opacity-80">Total Target Volume</p>
-              <p className="text-2xl font-bold">
-                {(orders.reduce((sum, o) => sum + o.targetQuantityKg, 0) / 1000).toLocaleString()} Tons
-              </p>
+              <p className="text-xs opacity-80">ESG Carbon Credits Earned</p>
+              <p className="text-2xl font-bold">{carbon.totalCredits} MT CO2e</p>
+              <p className="text-[10px] opacity-60">Verified Logistics Offset</p>
             </div>
           </div>
         </div>

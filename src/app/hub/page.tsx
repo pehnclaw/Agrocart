@@ -5,6 +5,7 @@ import RecentIntakes from "@/components/hub/RecentIntakes";
 import IncomingDeliveries from "@/components/hub/IncomingDeliveries";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import WeatherAlert from "@/components/shared/WeatherAlert";
+import SiloHealth from "@/components/hub/SiloHealth";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function HubDashboard() {
@@ -34,6 +35,11 @@ export default function HubDashboard() {
             <div className="card p-6 h-fit border-primary/20">
               <h2 className="text-xl font-semibold mb-4 text-primary">Incoming Deliveries</h2>
               <IncomingDeliveries />
+            </div>
+
+            <div className="card p-6 h-fit">
+              <h2 className="text-xl font-semibold mb-4">IoT Silo Health</h2>
+              <SiloHealth />
             </div>
 
             <div className="card p-6 h-fit">
