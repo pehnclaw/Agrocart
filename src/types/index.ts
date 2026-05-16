@@ -1,5 +1,5 @@
 // Role Definitions
-export type UserRole = "ADMIN" | "HUB_MANAGER" | "TRANSPORTER" | "FARMER" | "CORPORATE_BUYER";
+export type UserRole = "ADMIN" | "HUB_MANAGER" | "TRANSPORTER" | "FARMER" | "CORPORATE_BUYER" | "FLEET_OWNER" | "DRIVER";
 
 // Base Document Type
 export interface BaseDocument {
@@ -14,6 +14,7 @@ export interface User extends BaseDocument {
   role: UserRole;
   fullName?: string;
   hubId?: string; // If role is HUB_MANAGER, which hub they manage
+  employerId?: string; // If role is DRIVER, which Fleet Owner they work for
   fcmToken?: string; // For push notifications
   verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   documentUrls?: string[]; // IDs/CAC documents
@@ -52,8 +53,9 @@ export interface ProduceBatch extends BaseDocument {
 export interface Vehicle extends BaseDocument {
   licensePlate: string;
   capacityTons: number;
-  ownerId: string; // Transporter User ID
-  driverPhone: string;
+  ownerId: string; // Fleet Owner or Independent Transporter User ID
+  driverPhone?: string; // Optional if driven by the owner
+  status: "ACTIVE" | "MAINTENANCE";
   verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   documentUrls?: string[]; // License/Insurance photos
 }
@@ -63,7 +65,9 @@ export interface Trip extends BaseDocument {
   originHubId: string;
   destinationHubId: string;
   batchIds: string[]; // Batches grouped into this trip
-  vehicleId?: string; // Optional until a transporter accepts the bid
+  vehicleId?: string; // Assigned vehicle
+  driverId?: string; // Assigned hired driver (if managed by Fleet Owner)
+  ownerId?: string; // Fleet Owner or Independent Transporter who accepted the bid
   status: "PENDING_BID" | "ACCEPTED" | "IN_TRANSIT" | "DELIVERED";
   agreedPrice: number;
   escrowStatus: "HELD" | "RELEASED" | "DISPUTED";

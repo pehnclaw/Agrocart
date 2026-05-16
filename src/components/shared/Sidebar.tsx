@@ -8,7 +8,11 @@ import { auth } from "@/lib/firebase/config";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const navItems = {
+import { UserRole } from "@/types";
+
+type NavItem = { href: string; labelKey: string; icon: string };
+
+const navItems: Record<UserRole, NavItem[]> = {
   ADMIN: [
     { href: "/hq", labelKey: "nav_hq", icon: "📡" },
     { href: "/hq/analytics", labelKey: "nav_analytics", icon: "📊" },
@@ -38,10 +42,20 @@ const navItems = {
     { href: "/corporate/dashboard", labelKey: "nav_corp_dashboard", icon: "🏢" },
     { href: "/corporate/orders", labelKey: "nav_corp_orders", icon: "📝" },
   ],
+  FLEET_OWNER: [
+    { href: "/fleet", labelKey: "nav_fleet_overview", icon: "🏢" },
+    { href: "/loadboard", labelKey: "nav_loadboard", icon: "🚛" },
+    { href: "/fleet/dispatch", labelKey: "nav_fleet_dispatch", icon: "🗺️" },
+    { href: "/fleet/vehicles", labelKey: "nav_fleet_vehicles", icon: "🚜" },
+    { href: "/fleet/drivers", labelKey: "nav_fleet_drivers", icon: "👥" },
+  ],
+  DRIVER: [
+    { href: "/driver", labelKey: "nav_assigned_trips", icon: "🚚" },
+  ],
 };
 
 // Bottom tab items for mobile — show only the most important 3-4 per role
-const mobileTabItems = {
+const mobileTabItems: Record<UserRole, NavItem[]> = {
   ADMIN: [
     { href: "/hq", labelKey: "nav_hq", icon: "📡" },
     { href: "/hq/dispatch", labelKey: "nav_dispatch", icon: "🗺️" },
@@ -56,6 +70,18 @@ const mobileTabItems = {
   ],
   FARMER: [
     { href: "/farmer", labelKey: "nav_dashboard", icon: "🌾" },
+  ],
+  CORPORATE_BUYER: [
+    { href: "/corporate/dashboard", labelKey: "nav_corp_dashboard", icon: "🏢" },
+    { href: "/corporate/orders", labelKey: "nav_corp_orders", icon: "📝" },
+  ],
+  FLEET_OWNER: [
+    { href: "/fleet", labelKey: "nav_fleet", icon: "🏢" },
+    { href: "/loadboard", labelKey: "nav_loads", icon: "🚛" },
+    { href: "/fleet/dispatch", labelKey: "nav_dispatch", icon: "🗺️" },
+  ],
+  DRIVER: [
+    { href: "/driver", labelKey: "nav_trips", icon: "🚚" },
   ],
 };
 

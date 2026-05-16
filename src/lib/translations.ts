@@ -45,7 +45,13 @@ export const translations = {
     nav_my_dashboard: "My Dashboard",
     nav_corp_dashboard: "Procurement HQ",
     nav_corp_orders: "Purchase Orders",
-    nav_dashboard: "Dashboard"
+    nav_dashboard: "Dashboard",
+    nav_fleet_overview: "Fleet Overview",
+    nav_fleet_dispatch: "Dispatch Center",
+    nav_fleet_vehicles: "My Vehicles",
+    nav_fleet_drivers: "My Drivers",
+    nav_assigned_trips: "Assigned Trips",
+    nav_trips: "Trips"
   },
   ha: {
     hero_title: "Haɗa amfanin gona na Najeriya da Duniya",
@@ -93,7 +99,13 @@ export const translations = {
     nav_my_dashboard: "Dashboard Dina",
     nav_corp_dashboard: "Hukumar Saye",
     nav_corp_orders: "Odar Saye",
-    nav_dashboard: "Dashboard"
+    nav_dashboard: "Dashboard",
+    nav_fleet_overview: "Duban Runduna",
+    nav_fleet_dispatch: "Aika Motoci",
+    nav_fleet_vehicles: "Motoci Na",
+    nav_fleet_drivers: "Direbobina",
+    nav_assigned_trips: "Tafiye-tafiye",
+    nav_trips: "Tafiya"
   },
   yo: {
     hero_title: "Nsopọ Ise Agbe Naijiria mọ Agbaye",
@@ -141,7 +153,13 @@ export const translations = {
     nav_my_dashboard: "Dasibodu Mi",
     nav_corp_dashboard: "Ile-iṣẹ rira",
     nav_corp_orders: "Awọn aṣẹ rira",
-    nav_dashboard: "Dasibodu"
+    nav_dashboard: "Dasibodu",
+    nav_fleet_overview: "Akopọ Ọkọ",
+    nav_fleet_dispatch: "Ile-iṣẹ Fifiranṣẹ",
+    nav_fleet_vehicles: "Awọn Ọkọ Mi",
+    nav_fleet_drivers: "Awọn Awakọ Mi",
+    nav_assigned_trips: "Awọn Irin-ajo Ti a Yan",
+    nav_trips: "Awọn Irin-ajo"
   },
   ig: {
     hero_title: "Ijikọ owuwe ihe ubi Nigeria na Ụwa",
@@ -189,6 +207,12 @@ export const translations = {
     nav_my_dashboard: "Dashboard m",
     nav_corp_dashboard: "Isi Nweta",
     nav_corp_orders: "Iwu Ịzụta",
-    nav_dashboard: "Dashboard"
+    nav_dashboard: "Dashboard",
+    nav_fleet_overview: "Nchịkọta Fleet",
+    nav_fleet_dispatch: "Ebe Nzipu",
+    nav_fleet_vehicles: "Ụgbọala M",
+    nav_fleet_drivers: "Ndị Ọkwọ Ụgbọala M",
+    nav_assigned_trips: "Njem E Kenyere",
+    nav_trips: "Njem"
   }
 };

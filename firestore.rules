@@ -45,6 +45,15 @@ service cloud.firestore {
       );
     }
 
+    // --- Vehicles ---
+    match /vehicles/{vehicleId} {
+      allow read: if isSignedIn();
+      allow write: if hasRole('ADMIN') || (
+        (hasRole('TRANSPORTER') || hasRole('FLEET_OWNER')) && 
+        request.resource.data.ownerId == request.auth.uid
+      );
+    }
+
     // --- Trips / Loads ---
     match /trips/{tripId} {
       allow read: if isSignedIn();
@@ -52,10 +61,13 @@ service cloud.firestore {
       allow create: if hasRole('ADMIN');
       
       allow update: if hasRole('ADMIN') || (
-        hasRole('TRANSPORTER') && (
+        (hasRole('TRANSPORTER') || hasRole('FLEET_OWNER')) && (
           resource.data.status == 'PENDING_BID' || 
-          resource.data.vehicleId == request.auth.uid
+          resource.data.vehicleId == request.auth.uid ||
+          (resource.data.ownerId == request.auth.uid)
         )
+      ) || (
+        hasRole('DRIVER') && resource.data.driverId == request.auth.uid
       ) || (
         hasRole('HUB_MANAGER') && getUserData().hubId == resource.data.destinationHubId
       );
