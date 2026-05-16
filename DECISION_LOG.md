@@ -15,6 +15,17 @@ This document records the tough, super-important architectural and business logi
 
 **Decision:** We are implementing **Option A (High Security)**.
 
+---
+
+## Decision 002: Route Optimization Pricing Algorithm Baseline
+
+**Date:** 2026-05-16
+**Feature:** HQ Dispatch & Route Optimization Engine
+**Context:** When pooling batches into a trip, HQ Admins previously had to manually guess or calculate the payout price for transporters. To scale, we need an automated suggestion algorithm.
+**Decision:** We are implementing a baseline algorithm of **₦150 per Ton per Kilometer** using the Haversine formula for distance.
+*   *Note:* This ₦150 value is currently a placeholder for testing purposes. It establishes a baseline "Suggested Optimized Price".
+*   *Admin Override:* The HQ Admin retains the ability to manually override this suggested price if market conditions or negotiations require it.
+
 **Rationale:** 
 While Option B is faster and has less friction for onboarding digitally illiterate drivers, it sacrifices long-term security and accountability. Option A ensures that every physical movement of produce is tied to an authenticated, verified user session. This prevents link-sharing fraud (e.g., a driver sending the link to someone else to scan a fake code).
 

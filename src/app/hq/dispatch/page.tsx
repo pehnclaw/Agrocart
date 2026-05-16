@@ -7,6 +7,11 @@ import { ProduceBatch, Trip, Hub } from "@/types";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { v4 as uuidv4 } from "uuid";
 import { sendAgrocartSMS } from "@/lib/sms";
+import { calculateHaversineDistance, calculateOptimizedPrice } from "@/lib/routing";
+import dynamic from "next/dynamic";
+
+// Dynamically import map to avoid SSR issues
+const RoutePreviewMap = dynamic(() => import("@/components/hq/RoutePreviewMap"), { ssr: false });
 
 
 export default function DispatchPage() {
@@ -24,6 +29,49 @@ export default function DispatchPage() {
   const [saving, setSaving] = useState(false);
   const [smartBroadcast, setSmartBroadcast] = useState(true);
   const [tripType, setTripType] = useState<"MARKET_DELIVERY" | "INTERNAL_TRANSFER">("MARKET_DELIVERY");
+
+  // Route Engine State
+  const [distanceKm, setDistanceKm] = useState(0);
+  const [suggestedPrice, setSuggestedPrice] = useState(0);
+  const [originCoords, setOriginCoords] = useState<[number, number] | null>(null);
+  const [destCoords, setDestCoords] = useState<[number, number] | null>(null);
+
+  // Recalculate route and price whenever inputs change
+  useEffect(() => {
+    if (!originHubId || !destinationHubId || tripType === "MARKET_DELIVERY") {
+      setDistanceKm(0);
+      setSuggestedPrice(0);
+      return;
+    }
+
+    const origin = hubs.find(h => h.id === originHubId);
+    const dest = hubs.find(h => h.id === destinationHubId);
+
+    if (origin && dest) {
+      setOriginCoords([origin.location.lat, origin.location.lng]);
+      setDestCoords([dest.location.lat, dest.location.lng]);
+
+      const dist = calculateHaversineDistance(
+        origin.location.lat, origin.location.lng,
+        dest.location.lat, dest.location.lng
+      );
+      setDistanceKm(dist);
+
+      // Sum weight of selected batches
+      const totalWeightKg = selectedBatches.reduce((sum, batchId) => {
+        const batch = availableBatches.find(b => b.id === batchId);
+        return sum + (batch?.weightKg || 0);
+      }, 0);
+
+      const optimalPrice = calculateOptimizedPrice(dist, totalWeightKg);
+      setSuggestedPrice(optimalPrice);
+      
+      // Auto-set price if it's currently empty
+      if (!price) {
+        setPrice(optimalPrice.toString());
+      }
+    }
+  }, [originHubId, destinationHubId, selectedBatches, hubs, tripType, availableBatches, price]);
 
   useEffect(() => {
     const unsubHubs = onSnapshot(collection(db, "hubs"), (snapshot) => {
@@ -141,9 +189,10 @@ export default function DispatchPage() {
 
         {/* Create Trip Form */}
         {showForm && (
-          <div className="card glass p-6 mb-8 animate-fade-in">
-            <h2 className="text-xl font-semibold mb-4">New Trip</h2>
-            <form onSubmit={handleCreateTrip}>
+          <div className="card glass p-6 mb-8 animate-fade-in grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+              <h2 className="text-xl font-semibold mb-4">New Trip</h2>
+              <form onSubmit={handleCreateTrip}>
               <div className="mb-6">
                 <label className="block text-sm font-medium mb-1">Origin Hub *</label>
                 <select required className="input" value={originHubId} onChange={(e) => { setOriginHubId(e.target.value); setSelectedBatches([]); }}>
@@ -189,8 +238,24 @@ export default function DispatchPage() {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Agreed Price (₦) *</label>
+                  <label className="block text-sm font-medium mb-1 flex justify-between">
+                    <span>Agreed Price (₦) *</span>
+                    {suggestedPrice > 0 && (
+                      <button 
+                        type="button" 
+                        onClick={() => setPrice(suggestedPrice.toString())}
+                        className="text-xs text-primary font-bold hover:underline"
+                      >
+                        Use Optimal
+                      </button>
+                    )}
+                  </label>
                   <input required type="number" min="1000" className="input" placeholder="150000" value={price} onChange={(e) => setPrice(e.target.value)} />
+                  {suggestedPrice > 0 && (
+                    <p className="text-[10px] text-emerald-600 mt-1 font-bold">
+                      Algorithmic Suggestion: ₦{suggestedPrice.toLocaleString()} ({distanceKm.toFixed(1)} km)
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -240,10 +305,48 @@ export default function DispatchPage() {
                 </label>
               </div>
 
-              <button type="submit" className="btn btn-primary" disabled={saving || selectedBatches.length === 0}>
+              <button type="submit" className="btn btn-primary w-full" disabled={saving || selectedBatches.length === 0}>
                 {saving ? "Creating..." : `Dispatch ${selectedBatches.length} Batches`}
               </button>
             </form>
+            </div>
+            
+            {/* Route Map Preview */}
+            <div className="hidden lg:flex flex-col">
+              <h2 className="text-lg font-semibold mb-4">Route Intelligence Engine</h2>
+              {tripType === "INTERNAL_TRANSFER" && originCoords && destCoords ? (
+                <div className="flex-1 min-h-[400px]">
+                  <RoutePreviewMap 
+                    originCoords={originCoords} 
+                    destCoords={destCoords} 
+                    distanceKm={distanceKm} 
+                  />
+                  <div className="mt-4 p-4 bg-surface rounded-xl border border-border shadow-sm">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-muted">Distance</span>
+                      <span className="font-mono font-bold">{distanceKm.toFixed(1)} km</span>
+                    </div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-muted">Payload</span>
+                      <span className="font-mono font-bold">
+                        {(selectedBatches.reduce((s, id) => s + (availableBatches.find(b => b.id === id)?.weightKg || 0), 0) / 1000).toFixed(1)} Tons
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center pt-2 border-t border-border mt-2">
+                      <span className="text-sm font-bold text-primary">Algorithm Base Rate</span>
+                      <span className="font-mono font-bold text-emerald-600">₦150 / Ton / km</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-1 bg-surface rounded-xl border border-border flex items-center justify-center p-8 text-center text-muted min-h-[400px]">
+                  <div>
+                    <span className="text-4xl mb-2 block">🗺️</span>
+                    <p>Map visualization is only available for Internal Hub-to-Hub Transfers where coordinates are known.</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
